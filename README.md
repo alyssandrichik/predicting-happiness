@@ -369,8 +369,9 @@ Adjusted R-squared: 0.7648
 ``` r
 #Normality of Region
 ggplot(happy_country, aes(x = Region)) +
-geom_histogram(fill = "steelblue", stat="count") +
-theme_bw()
+  geom_histogram(fill = "steelblue", stat="count") +
+  theme_bw() +
+  theme(axis.text.x = element_text(angle = -90, hjust = 0, vjust = .5))
 #> Warning: Ignoring unknown parameters: binwidth, bins, pad
 ```
 
@@ -380,8 +381,8 @@ theme_bw()
 #Normality of GDP per capita
 logGDP <- log(happy_country$GDP_percapita)
 ggplot(happy_country, aes(x = GDP_percapita)) +
-geom_histogram(fill = "steelblue") +
-theme_bw()
+  geom_histogram(fill = "steelblue") +
+  theme_bw()
 #> `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
 ```
 
@@ -391,8 +392,8 @@ theme_bw()
 #Normality of Arable
 logArable <- log(happy_country$Arable)
 ggplot(happy_country, aes(x = logArable)) +
-geom_histogram(fill = "steelblue", bins = "15") +
-theme_bw()
+  geom_histogram(fill = "steelblue", bins = "15") +
+  theme_bw()
 ```
 
 <img src="man/figures/README-unnamed-chunk-46-1.png" width="100%" />
@@ -400,9 +401,9 @@ theme_bw()
 ``` r
 #Normality of Infantmortalityper1000births
 logInfantmortality <- log(happy_country$Infantmortalityper1000births)
-ggplot(happy_country, aes(x = logInfantmortality)) +
-geom_histogram(fill = "steelblue", bins = "10") +
-theme_bw()
+ggplot(happy_country, aes(x = logInfantmortality)) + 
+  geom_histogram(fill = "steelblue", bins = "10") +
+  theme_bw()
 ```
 
 <img src="man/figures/README-unnamed-chunk-47-1.png" width="100%" />
@@ -411,8 +412,8 @@ theme_bw()
 #Normality of PercievedCorruptionScore
 logPercievedCorruptionScore <- log(happy_country$PercievedCorruptionScore)
 ggplot(happy_country, aes(x = logPercievedCorruptionScore)) +
-geom_histogram(fill = "steelblue", bins = "10") +
-theme_bw()
+  geom_histogram(fill = "steelblue", bins = "10") +
+  theme_bw()
 ```
 
 <img src="man/figures/README-unnamed-chunk-48-1.png" width="100%" />
@@ -422,18 +423,18 @@ theme_bw()
 logCoastlinecoastbyarearatio <- log(happy_country$Coastlinecoastbyarearatio)
 lnCoastlinecoastbyarearatio <- log1p(happy_country$Coastlinecoastbyarearatio)
 ggplot(happy_country, aes(x = logCoastlinecoastbyarearatio)) +
-geom_histogram(fill = "steelblue", bins = "10") +
-theme_bw()
+  geom_histogram(fill = "steelblue", bins = "10") +
+  theme_bw()
 #> Warning: Removed 30 rows containing non-finite values (stat_bin).
 ```
 
 <img src="man/figures/README-unnamed-chunk-49-1.png" width="100%" />
 
 ``` r
-#Region + GDP + log Arable Land + log Infant Mortality + log Percieved Corruption + Coastline Area
+#Region + GDP + log Arable Land + log Infant Mortality + log Perceived Corruption + Coastline Area
 alymod7 <- lm(HappinessScore ~ Region + GDP_percapita + 
                 log(Arable) + log(Infantmortalityper1000births) + 
-                log(PercievedCorruptionScore) + Coastlinecoastbyarearatio, 
+                log(PercievedCorruptionScore) + Coastlinecoastbyarearatio,
               data = happy_country)
 ```
 
