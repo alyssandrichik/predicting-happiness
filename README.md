@@ -58,7 +58,17 @@ format, the data was ready for its initial analysis.
 
 ### Exploratory Data Analysis
 
-    #> `geom_smooth()` using formula 'y ~ x'
+``` r
+#LM Factors
+mod2<- lm(HappinessScore~Infantmortalityper1000births+Literacy, data=happy_country)
+ggplot(happy_country, aes(x=Infantmortalityper1000births+Literacy, y=HappinessScore)) +
+  geom_point()+
+  labs(x="Infant Mortality per 100 births + Literacy Rate", 
+       y="Happiness Score") +
+  geom_jitter()+
+  stat_smooth(method = "lm")
+#> `geom_smooth()` using formula 'y ~ x'
+```
 
 <img src="man/figures/README-figs-1.png" width="100%" /> Adjusted
 R-squared: 0.4808
@@ -80,7 +90,7 @@ Adjusted R-squared: 0.5964
 lm1<- lm(HappinessScore~Literacy, data= happy_country)
 lmplot1<- ggplot(happy_country, aes(x = Literacy, y = HappinessScore)) +
   geom_point() +
-  labs(x="Literacy", y="Happiness Score")+
+  labs(x="Literacy Rate", y="Happiness Score")+
   geom_jitter() +
   stat_smooth(method = "lm")
 lmplot1
@@ -93,7 +103,7 @@ lmplot1
 lm2<- lm(HappinessScore~Birthrate, data= happy_country)
 lmplot2<- ggplot(happy_country, aes(x = Birthrate, y = HappinessScore)) +
   geom_point() +
-  labs(x="Birthrate", y="Happiness Score")+
+  labs(x="Birth Rate", y="Happiness Score")+
   geom_jitter() +
   stat_smooth(method = "lm")
 lmplot2
@@ -119,7 +129,7 @@ Adjusted R-squared: 0.1253
 
 ### Breakdown of Variables and Regions Data
 
-Top Correlated Varaiables: Perceived Corruption (0.8832017), Net
+Top Correlated Variables: Perceived Corruption (0.8832017), Net
 Migration (0.8384467), and Industry(0.8170564).
 
 ``` r
@@ -138,7 +148,7 @@ western_europe_cor <- western_europe_nocat %>%
   cor(western_europe_nocat)
 ```
 
-Top Correlated Variables: Percieved Corruption (0.870394734), GDP per
+Top Correlated Variables: Perceived Corruption (0.870394734), GDP per
 capita (0.854352684), Crops (-0.829523968).
 
 ``` r
@@ -212,8 +222,9 @@ Adjusted R-squared: 0.6589 p-value: 0.001531
 ``` r
 #Happiness Score sorted by Region
 RegionPlot<- ggplot(happy_country, aes(x = Region, y = HappinessScore)) +
- geom_point() +
- labs(x="Region", y="Happiness Score")
+  geom_point() +
+  labs(x="Region", y="Happiness Score")+
+  theme(axis.text.x = element_text(angle = -90, hjust = 0, vjust = .5))
 RegionPlot
 ```
 
@@ -221,7 +232,7 @@ RegionPlot
 
 ### Modeling
 
-Ridge and Lasso
+#### Ridge and Lasso
 
 ``` r
 #OLS with interaction
@@ -248,7 +259,7 @@ plot(cv.out)
 
 <img src="man/figures/README-unnamed-chunk-25-1.png" width="100%" />
 
-Regression Trees
+#### Regression Trees
 
 ``` r
 regtree<- tree(HappinessScore ~ .-HappinessScore,data=num_happy)
@@ -273,9 +284,9 @@ MSE_test
 #> [1] 0.3164792
 ```
 
-Boosted Tree \#\#\# Boost
+#### Boosted Tree
 
-## Random Forest
+#### Random Forest
 
 ``` r
 rf <- randomForest(HappinessScore ~ .-HappinessScore, data = traind, importance = TRUE)
@@ -294,7 +305,7 @@ varImpPlot(rf)
 
 <img src="man/figures/README-unnamed-chunk-36-1.png" width="100%" />
 
-LINEAR MODELS
+#### Linear Models
 
 ``` r
 #Region Linear Model

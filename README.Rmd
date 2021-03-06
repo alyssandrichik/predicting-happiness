@@ -30,6 +30,7 @@ Our final dataset pulls data from a wide variety of sources.  We obtained our â€
 library(tidyverse)
 library(dplyr)
 library(readr)
+library(stringr)
 countries_of_the_world <- read_csv("countries_of_the_world.csv")
 X2017 <- read_csv("2017.csv")
 percievedcorruptionwithUS <- read_csv("percievedcorruptionwithUS.csv")
@@ -37,13 +38,10 @@ Country_happy<- merge(X2017,countries_of_the_world)
 Country_happy2 <- merge(Country_happy, percievedcorruptionwithUS)
 happy_country <- Country_happy2 %>%
   na.omit()
-library(stringr)
 names(happy_country)<-str_replace_all(names(happy_country), c(" " = "." , "," = "" ))
 names(happy_country)<-str_replace_all(names(happy_country), c("%" = "", "\\("="", "\\)"="", "\\."="", "\\$"="_", "/"="by"))
 
-
 happy_country <- subset(happy_country, select = -c(HappinessRank, Whiskerhigh, Whiskerlow, EconomyGDPperCapita, Family, HealthLifeExpectancy, Freedom, Generosity, TrustGovernmentCorruption, DystopiaResidual))
-
 
 class(happy_country$Phonesper1000)
 
@@ -84,13 +82,13 @@ happy_country<-happy_country%>%
 class(happy_country$Service)
 ```
 
-
-```{r figs, echo=FALSE, fig.width=7,fig.height=6,fig.cap=""}
+```{r figs, fig.width=7,fig.height=6,fig.cap=""}
 #LM Factors
 mod2<- lm(HappinessScore~Infantmortalityper1000births+Literacy, data=happy_country)
 ggplot(happy_country, aes(x=Infantmortalityper1000births+Literacy, y=HappinessScore)) +
   geom_point()+
-  labs(x="Factors", y="Happiness Score") +
+  labs(x="Infant Mortality per 100 births + Literacy Rate", 
+       y="Happiness Score") +
   geom_jitter()+
   stat_smooth(method = "lm")
 ```
@@ -116,7 +114,7 @@ Adjusted R-squared:  0.5964
 lm1<- lm(HappinessScore~Literacy, data= happy_country)
 lmplot1<- ggplot(happy_country, aes(x = Literacy, y = HappinessScore)) +
   geom_point() +
-  labs(x="Literacy", y="Happiness Score")+
+  labs(x="Literacy Rate", y="Happiness Score")+
   geom_jitter() +
   stat_smooth(method = "lm")
 lmplot1
@@ -126,7 +124,7 @@ lmplot1
 lm2<- lm(HappinessScore~Birthrate, data= happy_country)
 lmplot2<- ggplot(happy_country, aes(x = Birthrate, y = HappinessScore)) +
   geom_point() +
-  labs(x="Birthrate", y="Happiness Score")+
+  labs(x="Birth Rate", y="Happiness Score")+
   geom_jitter() +
   stat_smooth(method = "lm")
 lmplot2
@@ -142,15 +140,15 @@ lmplot3<- ggplot(happy_country, aes(x = Deathrate, y = HappinessScore)) +
   geom_jitter() +
   stat_smooth(method = "lm")
 lmplot3
-
 ```
 Adjusted R-squared:  0.1253
 
 
 ```{r, include=FALSE}
 CountryPlot<- ggplot(happy_country, aes(x = Country, y = HappinessScore)) +
- geom_point() +
- labs(x="Country", y="Happiness Score")
+  geom_point() +
+  labs(x="Country", y="Happiness Score") +
+  theme(axis.text.x = element_text(angle = -90, hjust = 0, vjust = .5))
 CountryPlot
 meanHappy<-mean(happy_country[["HappinessScore"]])
 meanHappy
@@ -164,7 +162,7 @@ eastern_europe_nocat <- subset(eastern_europe, select = -c(Region, Country, Clim
 eastern_europe_cor <- eastern_europe_nocat %>%
   cor(eastern_europe_nocat)
 ```
-Top Correlated Varaiables: Perceived Corruption (0.8832017), Net Migration (0.8384467), and Industry(0.8170564).
+Top Correlated Variables: Perceived Corruption (0.8832017), Net Migration (0.8384467), and Industry(0.8170564).
 ```{r}
 #Linear Model to Predict Eastern European Happiness
 EastEurolm <- lm(HappinessScore ~ PercievedCorruptionScore + Netmigration + 
@@ -180,7 +178,7 @@ western_europe_nocat <- subset(western_europe, select = -c(Region, Country, Clim
 western_europe_cor <- western_europe_nocat %>%
   cor(western_europe_nocat)
 ```
-Top Correlated Variables: Percieved Corruption (0.870394734), GDP per capita (0.854352684), Crops (-0.829523968).
+Top Correlated Variables: Perceived Corruption (0.870394734), GDP per capita (0.854352684), Crops (-0.829523968).
 ```{r}
 #Linear Model to Predict Western European Happiness
 WestEurolm <- lm(HappinessScore ~ PercievedCorruptionScore + GDP_percapita + 
@@ -188,7 +186,6 @@ WestEurolm <- lm(HappinessScore ~ PercievedCorruptionScore + GDP_percapita +
 ```
 Adjusted R-squared: 0.8866
 p-value: 2.623e-05
-
 ```{r}
 #Latin America and Caribbean Region
 latin_america_carib <- filter(happy_country, Region == "LATIN AMER. & CARIB")
@@ -240,13 +237,14 @@ p-value: 0.001531
 ```{r}
 #Happiness Score sorted by Region
 RegionPlot<- ggplot(happy_country, aes(x = Region, y = HappinessScore)) +
- geom_point() +
- labs(x="Region", y="Happiness Score")
+  geom_point() +
+  labs(x="Region", y="Happiness Score")+
+  theme(axis.text.x = element_text(angle = -90, hjust = 0, vjust = .5))
 RegionPlot
 ```
 
 ### Modeling
-Ridge and Lasso
+#### Ridge and Lasso
 ```{r, include=FALSE}
 library(broom)
 xnew <- model.matrix(HappinessScore~., num_happy)[,-1]
@@ -283,7 +281,7 @@ OLSMSE<- mean((OLSpred-ytestnew)^2)
 OLSMSE
 ```
 
-```{r,}
+```{r}
 #OLS without interaction
 olsmod2<- lm(HappinessScore~Agriculture+Industry+Service, data=num_happy)
 par(mfrow = c(2, 2))
@@ -340,7 +338,7 @@ lasso.coef  <- predict(lasso.mod, type = 'coefficients', s = bestlamnew)[1:20,]
 lasso.coef
 ```
 
-Regression Trees
+#### Regression Trees
 ```{r, include=FALSE}
 library(tree)
 library(MASS)
@@ -372,8 +370,7 @@ MSE_test<- mean((tree_est - num_happy$HappinessScore)^2)
 MSE_test
 ```
 
-Boosted Tree
-### Boost
+#### Boosted Tree
 ```{r, include=FALSE}
 set.seed(1)
 train <- sample(1:nrow(num_happy), nrow(num_happy) * .75)
@@ -387,16 +384,14 @@ pred66 <- predict(boost1, newdata = testd, n.trees = 50, type = "response", shri
 MSE_test2<- mean((pred66 - testd$HappinessScore)^2)
 MSE_test2
 ```
-## Random Forest
+#### Random Forest
 ```{r, include=FALSE}
 library(randomForest)
 ```
-
 ```{r}
 rf <- randomForest(HappinessScore ~ .-HappinessScore, data = traind, importance = TRUE)
 plot(rf)
 ```
-
 ```{r}
 testrf <- predict(rf, newdata=testd)
 MSE2<- mean((testrf - testd$HappinessScore)^2)
@@ -404,7 +399,7 @@ MSE2
 varImpPlot(rf)
 ```
 
-LINEAR MODELS
+#### Linear Models
 ```{r}
 #Region Linear Model
 alymod<- lm(HappinessScore ~ Region, data = happy_country)
@@ -450,14 +445,12 @@ alymod6 <- lm(HappinessScore ~ Region + GDP_percapita + Arable +
                 Coastlinecoastbyarearatio, data = happy_country)
 ```
 Adjusted R-squared: 0.7648 
-
 ```{r}
 #Normality of Region
 ggplot(happy_country, aes(x = Region)) +
 geom_histogram(fill = "steelblue", stat="count") +
 theme_bw()
 ```
-
 ```{r}
 #Normality of GDP per capita
 logGDP <- log(happy_country$GDP_percapita)
@@ -465,7 +458,6 @@ ggplot(happy_country, aes(x = GDP_percapita)) +
 geom_histogram(fill = "steelblue") +
 theme_bw()
 ```
-
 ```{r}
 #Normality of Arable
 logArable <- log(happy_country$Arable)
@@ -473,7 +465,6 @@ ggplot(happy_country, aes(x = logArable)) +
 geom_histogram(fill = "steelblue", bins = "15") +
 theme_bw()
 ```
-
 ```{r}
 #Normality of Infantmortalityper1000births
 logInfantmortality <- log(happy_country$Infantmortalityper1000births)
@@ -496,7 +487,6 @@ ggplot(happy_country, aes(x = logCoastlinecoastbyarearatio)) +
 geom_histogram(fill = "steelblue", bins = "10") +
 theme_bw()
 ```
-
 ```{r}
 #Region + GDP + log Arable Land + log Infant Mortality + log Percieved Corruption + Coastline Area
 alymod7 <- lm(HappinessScore ~ Region + GDP_percapita + 
@@ -526,13 +516,11 @@ predict(linearmodel1, newdata = testD)
 training_MSE <- mean(linearmodel1$residuals^2)
 training_MSE
 ```
-
 ```{r}
 #Residuals 1
 par(mfrow = c(1, 2))
 plot(linearmodel1, 1:2)
 ```
-
 ```{r}
 #Train 2 with the Log variables
 linearmodel2 <- lm(HappinessScore ~ Region + GDP_percapita + 
@@ -547,7 +535,6 @@ predict(linearmodel2, newdata = testD)
 training_MSE2 <- mean(linearmodel2$residuals^2)
 training_MSE2
 ```
-
 ```{r}
 #Residuals 2
 par(mfrow = c(1, 2))
