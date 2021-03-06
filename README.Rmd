@@ -162,38 +162,6 @@ meanHappy<-mean(happy_country[["HappinessScore"]])
 meanHappy
 ```
 
-
-#PCA
-```{r}
-pca1 <- prcomp(num_happy, center=TRUE, scale. =  TRUE)
-```
-
-```{r, include=FALSE}
-library(devtools)
-install_github("vqv/ggbiplot")
-library(ggbiplot)
-```
-
-```{r}
-ggbiplot(pca1)
-dat <- as.data.frame(pca1$x)
-PCAPlot <- ggplot(dat, aes(x = PC1, y = PC2)) +
-  geom_point(size = 3) +
-  xlim(c(-3, 3)) +
-  theme_bw(base_size = 18)
-PCAPlot
-```
-
-```{r echo = FALSE, fig.align="center", fig.height = 5.5, fig.width=7}
-d1 <- data.frame(PC = 1:20,
-                PVE = pca1$sdev^2 / sum(pca1$sdev^2))
-ggplot(d1, aes(x = PC, y = PVE)) +
-  geom_line() +
-  geom_point() +
-  theme_bw(base_size = 18)
-```
-Scree Plot
-
 ##Breakdown of Variables and Regions Data
 ```{r, include=FALSE}
 #Eastern Europe Region
@@ -608,7 +576,6 @@ Our boosted tree gave an MSE of 28.22, either indicating an error in our computi
 
 The random forest run gave an MSE of 0.45, with the random forests plot indicating the error drop at around 100 trees. The Variable Importance Plot was very indicative of which factors contributed to the random forest capture, with GDP Per Capita holding the most weight, and Phones per 1000, Agriculture, and Perceived Corruption following behind. 
 
-Our Principal Component Analysis helped to narrow our model building, and as seen in the Scree Plot, most of the variation is captured in the first few principal components; these first five factors explain the most amount of variability in our Happiness Score data. 
 
 If we were to continue this project, one of the first things we would do would be to change our data set a little bit. We would use a dataset that doesn’t combine multiple years of data collection and focus just on information from one year so we could then use a different year as testing data. This would then more clearly show correlation of variables and true accuracy of our model. Splitting the dataset we had really spread thin our observations since we had only so many observations in so many regions. This would not have been a worry of ours if we had a larger training data set (a full year). We would also collect more variables to add to the dataset that are more representative of the different cultures in different countries. Our data set focused mostly of broad country data, when data/information on the people of a country should also be very telling. This is definitely a weakness in our dataset since, with this information, we would have been more able to accurately predict the happiness score based off of what makes people happy in different countries/regions. 
 
