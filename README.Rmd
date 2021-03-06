@@ -1,9 +1,9 @@
 ---
-title: "Predicting Happiness 2019"
-author: "Alyssa Andrichik, Eva Licht, and Joe Yalowitz"
-subtitle: "An Attempt"
 output: github_document
 ---
+# Predicting Happiness, an Attempt
+The final project of our Fall 2019 Statistical Learning class, by Alyssa Andrichik, Eva Licht, and Joe Yalowitz.
+
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
@@ -13,25 +13,19 @@ knitr::opts_chunk$set(
 )
 ```
 
-## Abstract
+### Abstract
 We investigate the World Happiness Index in order to build a model that can predict a country's happiness score based on demographic and geographic factors such as literacy levels, cell-phone use, birth rate, death rate, GDP per capita, perceived corruption, etc. We build an array of linear models, simple and with interaction, and use other regression analysis tools such as ridge, lasso, and principal component analysis to understand our data. We also use regression trees, random forests, and boosted trees to develop prediction methods for our research question. We determine that a country’s region is the best predictor of its happiness score.  
 
---
-
-## Introduction
+### Introduction
 Happiness can define a country. Beyond the great importance of individual and communal well-being that accompanies happiness and positive emotions, studies show that positive emotions contribute to “broadening workers” individual mindsets, enabling them to build up their personal resources in terms of enhanced sensitivity and positive attitudes toward their workplace,” and can increase productivity (De Satio 2019). Predicting a country’s happiness can aid governments in supporting their citizens and ensure greater well-being.
 
 In terms of data analysis, we employed both data model analysis and algorithmic model analysis.  Two primary research questions guided our project.  First, can we use a mixture of demographic and geographic data to predict happiness for a country? Second, is there a significant difference in happiness score between regions of the world, and is region a significant predictor of happiness?
 
---
-
-## The Data
+### The Data
 
 Our final dataset pulls data from a wide variety of sources.  We obtained our “happiness” data from the Gallup World Poll.  Our demographic data on countries came from the US Government.  Data on corruption came from Transparency International.  We combined these disparate sources into one data set with 120 observations and 22 variables.  Each observation refers to a country of the world. These combinations created our complete dataset, but required immense data wrangling. As the sources differed, merging by country resulted in errors because each data set recorded country name differently. We had to mutate the data to eliminate these differences: changing all three data sets to reporting “United States” rather than “The United States” or “United States of America.” Additionally, the data was collected by several different organizations, and some data had commas to signify decimals, rather than periods. Variable names had to be normalized and checked for any possible causes of error; for example, GDP per capita was originally reported as “GDP ($ per capita)” and the dollar sign prompted errors in the code. After fixing the variable names, merging, and checking the data reporting format, the data was ready for its initial analysis.
 
----
-
-## Exploratory Data Analysis
+### Exploratory Data Analysis
 ```{r setup, include=FALSE}
 library(tidyverse)
 library(dplyr)
@@ -162,7 +156,7 @@ meanHappy<-mean(happy_country[["HappinessScore"]])
 meanHappy
 ```
 
-##Breakdown of Variables and Regions Data
+### Breakdown of Variables and Regions Data
 ```{r, include=FALSE}
 #Eastern Europe Region
 eastern_europe <- filter(happy_country, Region == "EASTERN EUROPE")
@@ -251,7 +245,7 @@ RegionPlot<- ggplot(happy_country, aes(x = Region, y = HappinessScore)) +
 RegionPlot
 ```
 
-## Modeling
+### Modeling
 Ridge and Lasso
 ```{r, include=FALSE}
 library(broom)
@@ -379,7 +373,7 @@ MSE_test
 ```
 
 Boosted Tree
-## Boost
+### Boost
 ```{r, include=FALSE}
 set.seed(1)
 train <- sample(1:nrow(num_happy), nrow(num_happy) * .75)
@@ -560,7 +554,7 @@ par(mfrow = c(1, 2))
 plot(linearmodel2, 1:2)
 ```
 
-## Discussion
+### Discussion
 In our exploratory data analysis, we created some basic linear regression models that we thought would play a large part in predicting a country’s happiness score. These basic models used 1-3 numeric predictors and gave us the resulting adjusted R-Squared values, which told us how well these predictors predict happiness. Trying out model after model (most we don’t include in this since they did not provide us with any new, viable information), and not creating any decent models, we realized that ignoring some of the categorical variables in our dataset may not be the right move. Creating a model that is able to predict any country in the world’s happiness and not including the varying factors different cultures take more into account when understanding their own happiness is foolish. So, we decided the best variable we have in our dataset to account for cultural differences is Region since all the countries in a region tend to be more closely tied in culture, government, and history. 
 
 So, in our exploratory analysis, we broke apart the dataset based on the different regions. We then looked at the predictors that correlated the most to the Happiness Score variable in a few of the regions represented in the dataset, and, just as we expected, different predictors played a larger role in predicting the happiness score in different regions.This means that it would be wrong of us not to include Region in our linear models since, without it, we would be missing out on a more distinct predictor. We also created a plot of Region vs. Happiness Score to also show that different regions seemed to have a different range of a Happiness Score. This means that different regions seem to be, on average, happier or less happy than others. So, overall, the Region variable gives us (1) a peek into the belief that what makes a person happy is different in different cultures, (2) a distinct way to account for the varying importance of different variables throughout different regions, and (3) another clear way to predict a country’s happiness score based on what region it is in. With this realization, we made linear models for a few of the regional datasets to see both how well of a model we could make (even though they are most definitely over-fit), and what factors contributed to the best linear models we were able to create--smallest  p-value and highest adjusted R-squared--for each region we looked at.
@@ -571,17 +565,15 @@ The final linear models, however, do not run into those specific issues since th
 
 We created an Ordinary Least Squares model, and obtained regression coefficients for each factor in a linear model that included all the factors. This indicated that Infant Mortality per 1000 births, GDP Per Capita, Agriculture, Industry, and Service were the variables with statistical significance with model building with respective P-values of: 0.0426, 0.0313, 0.0255, 0.0247, and 0.0247. When penalizing for complexity in Ridge and Lasso, our Ridge Regression provided an optimal lambda of 1.464, and a test MSE of 0.443. Our Lasso MSE was much higher, 1.37, and therefore ridge regression was preferable in capturing the data. 
 
-Our algorithmic analyses tended to capture the data well in comparison to some of the linear modeling, with our first regression tree providing a primary split with Agriculture. After pruning, the N Leaves plot reported the optimal at N=5. This pruned regression tree gave an MSE of 0.316.
-Our boosted tree gave an MSE of 28.22, either indicating an error in our computing, or a much worse fit than the pruned regression tree.
+Our algorithmic analyses tended to capture the data well in comparison to some of the linear modeling, with our first regression tree providing a primary split with Agriculture. After pruning, the N Leaves plot reported the optimal at N=5. This pruned regression tree gave an MSE of 0.316. Our boosted tree gave an MSE of 28.22, either indicating an error in our computing, or a much worse fit than the pruned regression tree.
 
 The random forest run gave an MSE of 0.45, with the random forests plot indicating the error drop at around 100 trees. The Variable Importance Plot was very indicative of which factors contributed to the random forest capture, with GDP Per Capita holding the most weight, and Phones per 1000, Agriculture, and Perceived Corruption following behind. 
 
+If we were to continue this project, one of the first things we would do would be to change our data set a little bit. We would use a dataset that does not combine multiple years of data collection and focus just on information from one year so we could then use a different year as testing data. This would then more clearly show correlation of variables and true accuracy of our model. Splitting the dataset we had really spread thin our observations since we had only so many observations in so many regions. This would not have been a worry of ours if we had a larger training data set (a full year). We would also collect more variables to add to the dataset that are more representative of the different cultures in different countries. Our data set focused mostly of broad country data, when data/information on the people of a country should also be very telling. This is definitely a weakness in our dataset since, with this information, we would have been more able to accurately predict the happiness score based off of what makes people happy in different countries/regions. 
 
-If we were to continue this project, one of the first things we would do would be to change our data set a little bit. We would use a dataset that doesn’t combine multiple years of data collection and focus just on information from one year so we could then use a different year as testing data. This would then more clearly show correlation of variables and true accuracy of our model. Splitting the dataset we had really spread thin our observations since we had only so many observations in so many regions. This would not have been a worry of ours if we had a larger training data set (a full year). We would also collect more variables to add to the dataset that are more representative of the different cultures in different countries. Our data set focused mostly of broad country data, when data/information on the people of a country should also be very telling. This is definitely a weakness in our dataset since, with this information, we would have been more able to accurately predict the happiness score based off of what makes people happy in different countries/regions. 
+Through creating multiple algorithmic and modeling machines with supervised and unsupervised learning and regression and classification methods, we were able to investigate the effects of various geographic and demographic factors on country Happiness. While we could not build a perfect model to predict Happiness Score, we were able to investigate the factors contributing to a country’s Happiness, and explore various machine learning methods to capture the trend in the data by country. Our analysis showed factors that seemed to contribute more to capturing the true trends in the data, with Region and GDP per capita triumphing in many models, however other factors paired with those ultimately increased the strength of each model, with no one variable rising above. This indicates Happiness is just as complex as one would think. 
 
-Through creating multiple algorithmic and modelling machines with supervised and unsupervised learning and regression and classification methods, we were able to investigate the effects of various geographic and demographic factors on country Happiness. While we could not build a perfect model to predict Happiness Score, we were able to investigate the factors contributing to a country’s Happiness, and explore various machine learning methods to capture the trend in the data by country. Our analysis showed factors that seemed to contribute more to capturing the true trends in the data, with Region and GDP Per Capita triumphing in many models, however other factors paired with those ultimately increased the strength of each model, with no one variable rising above. This indicates Happiness is just as complex as one would think. 
-
-## References
+### References
 Arafa, S. (2019, April 5). Why Governments Should Care More about Happiness. Greater Good. https://greatergood.berkeley.edu/article/item/why_governments_should_care_more_about_happiness
 
 

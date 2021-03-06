@@ -1,8 +1,10 @@
-Predicting Happiness 2019
-================
-Alyssa Andrichik, Eva Licht, and Joe Yalowitz
 
-## Abstract
+# Predicting Happiness, an Attempt
+
+The final project of our Fall 2019 Statistical Learning class, by Alyssa
+Andrichik, Eva Licht, and Joe Yalowitz.
+
+### Abstract
 
 We investigate the World Happiness Index in order to build a model that
 can predict a country’s happiness score based on demographic and
@@ -15,9 +17,7 @@ boosted trees to develop prediction methods for our research question.
 We determine that a country’s region is the best predictor of its
 happiness score.
 
-–
-
-## Introduction
+### Introduction
 
 Happiness can define a country. Beyond the great importance of
 individual and communal well-being that accompanies happiness and
@@ -35,9 +35,7 @@ to predict happiness for a country? Second, is there a significant
 difference in happiness score between regions of the world, and is
 region a significant predictor of happiness?
 
-–
-
-## The Data
+### The Data
 
 Our final dataset pulls data from a wide variety of sources. We obtained
 our “happiness” data from the Gallup World Poll. Our demographic data on
@@ -58,9 +56,7 @@ per capita)” and the dollar sign prompted errors in the code. After
 fixing the variable names, merging, and checking the data reporting
 format, the data was ready for its initial analysis.
 
------
-
-## Exploratory Data Analysis
+### Exploratory Data Analysis
 
     #> `geom_smooth()` using formula 'y ~ x'
 
@@ -121,7 +117,7 @@ lmplot3
 <img src="man/figures/README-unnamed-chunk-6-1.png" width="100%" />
 Adjusted R-squared: 0.1253
 
-\#\#Breakdown of Variables and Regions Data
+### Breakdown of Variables and Regions Data
 
 Top Correlated Varaiables: Perceived Corruption (0.8832017), Net
 Migration (0.8384467), and Industry(0.8170564).
@@ -223,7 +219,7 @@ RegionPlot
 
 <img src="man/figures/README-unnamed-chunk-18-1.png" width="100%" />
 
-## Modeling
+### Modeling
 
 Ridge and Lasso
 
@@ -277,7 +273,7 @@ MSE_test
 #> [1] 0.3164792
 ```
 
-Boosted Tree \#\# Boost
+Boosted Tree \#\#\# Boost
 
 ## Random Forest
 
@@ -476,7 +472,7 @@ plot(linearmodel2, 1:2)
 
 <img src="man/figures/README-unnamed-chunk-57-1.png" width="100%" />
 
-## Discussion
+### Discussion
 
 In our exploratory data analysis, we created some basic linear
 regression models that we thought would play a large part in predicting
@@ -580,15 +576,10 @@ Plot was very indicative of which factors contributed to the random
 forest capture, with GDP Per Capita holding the most weight, and Phones
 per 1000, Agriculture, and Perceived Corruption following behind.
 
-Our Principal Component Analysis helped to narrow our model building,
-and as seen in the Scree Plot, most of the variation is captured in the
-first few principal components; these first five factors explain the
-most amount of variability in our Happiness Score data.
-
 If we were to continue this project, one of the first things we would do
 would be to change our data set a little bit. We would use a dataset
-that doesn’t combine multiple years of data collection and focus just on
-information from one year so we could then use a different year as
+that does not combine multiple years of data collection and focus just
+on information from one year so we could then use a different year as
 testing data. This would then more clearly show correlation of variables
 and true accuracy of our model. Splitting the dataset we had really
 spread thin our observations since we had only so many observations in
@@ -602,7 +593,7 @@ dataset since, with this information, we would have been more able to
 accurately predict the happiness score based off of what makes people
 happy in different countries/regions.
 
-Through creating multiple algorithmic and modelling machines with
+Through creating multiple algorithmic and modeling machines with
 supervised and unsupervised learning and regression and classification
 methods, we were able to investigate the effects of various geographic
 and demographic factors on country Happiness. While we could not build a
@@ -610,12 +601,12 @@ perfect model to predict Happiness Score, we were able to investigate
 the factors contributing to a country’s Happiness, and explore various
 machine learning methods to capture the trend in the data by country.
 Our analysis showed factors that seemed to contribute more to capturing
-the true trends in the data, with Region and GDP Per Capita triumphing
+the true trends in the data, with Region and GDP per capita triumphing
 in many models, however other factors paired with those ultimately
 increased the strength of each model, with no one variable rising above.
 This indicates Happiness is just as complex as one would think.
 
-## References
+### References
 
 Arafa, S. (2019, April 5). Why Governments Should Care More about
 Happiness. Greater Good.
